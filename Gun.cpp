@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "gun.h"
+#include "game.h"
 
 Gun::Gun(int Capacity, float ReloadTime, float ShootTime) : mAmmo(Capacity), mCapacity(Capacity), mIsReloading(false), mIsShooting(false), ReloadTime(ReloadTime), ShootTime(ShootTime), mReloadProgress(0.0f), mShootProgress(0.0f) {
 
@@ -31,10 +32,89 @@ void Gun::Reload()
 
 bool Gun::SetState(State to)
 {
+    if (TransitionTo(to)) {
+        mState = to;
+        return true;
+    }
+    return false;
+}
 
+bool Gun::TransitionTo(State newState) {
+    if (mTransitions[(int)mState][(int)newState] == 1) {
+        return true;
+    }
+    return false;
+}
+
+void Update(float deltaTime) {
+    switch (mState) {
+    case State::Idle:
+        // Check if we can shoot or reload
+        if (mAmmo <= 0) {
+            SetState(State::Empty);
+        }
+        else {
+            // Can shoot or reload
+            if (mIsShooting) {
+                mShootProgress += deltaTime;
+                if (mShootProgress >= ShootTime) {
+                    mAmmo--;
+                    mIsShooting = false;
+                    mShootProgress = 0.0f;
+                    SetState(State::Idle);
+                }
+            }
+            else if (mIsReloading) {
+                mReloadProgress += deltaTime;
+                if (mReloadProgress >= ReloadTime) {
+                    mAmmo = mCapacity;
+                    mIsReloading = false;
+                    mReloadProgress = 0.0f;
+                    SetState(State::Idle);
+                }
+            }
+        }
+        break;
+
+    case State::Shoot:
+        Shoot();
+        break;
+
+    case State::Reload:
+        Reload();
+        break;
+
+    case State::Empty:
+        if (mAmmo == 0) {
+            SetState(State::Reload);
+        }
+        break;
+
+    default:
+        break;
+    }
 }
 
 
+void PrintState() const {
+    switch (mState) {
+    case State::Idle:
+        std::cout << "State: Idle\n";
+        break;
+    case State::Shoot:
+        std::cout << "State: Shoot\n";
+        break;
+    case State::Reload:
+        std::cout << "State: Reload\n";
+        break;
+    case State::Empty:
+        std::cout << "State: Empty\n";
+        break;
+    default:
+        break;
+    }
+
+}
 
 
 

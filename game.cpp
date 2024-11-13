@@ -1,4 +1,5 @@
 #include "game.h"
+#include "Gun.h"
 #include <iostream>
 
 
@@ -16,39 +17,6 @@ void Game::HandleInput(char input)
 }
 
 
-
-void Game::Update(float deltaTime)
-{
-    if (gun.mIsReloading) {
-        gun.mReloadProgress += deltaTime;
-        if (gun.mReloadProgress >= gun.ReloadTime) {
-            gun.mReloadProgress = 0.0f;
-            gun.mIsReloading = false;
-            std::cout << "Reload complete ! Ammo = " << gun.mAmmo << std::endl;
-        }
-        else {
-            std::cout << "Wait to reload... " << gun.mAmmo << std::endl;
-        }
-
-    }
-    if (gun.mIsShooting) {
-        gun.mShootProgress += deltaTime;
-        if (gun.mShootProgress >= gun.ShootTime) {
-            gun.mShootProgress = 0.0f;
-            gun.mIsShooting = false;
-            std::cout << " Shoot !  Ammo = " << gun.mAmmo << std::endl;
-
-        }
-        else {
-            std::cout << "Already shooting!" << gun.mAmmo << std::endl;
-        }
-    }
-}
-
-
-
-
-
 int main()
 {
     Game game;
@@ -60,6 +28,7 @@ int main()
             {
                 char key = _getch();
                 std::cout << "Touche pressée : " << key << std::endl;
+                
                 if (key == 27)
                 {
                     running = false;
