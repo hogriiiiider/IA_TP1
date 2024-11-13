@@ -17,6 +17,7 @@ public:
 	Gun(int mCapacity, float ReloadTime, float ShootTime);
 	void Reload();
 	void Shoot();
+	void PrintState();
 
 	enum class State
 	{
@@ -45,26 +46,6 @@ public:
 
 	bool SetState(State to);
 	bool TransitionTo(State newState);
-
-	   case State::Shoot:
-		   // The shooting action is being handled in the Shoot() function
-		   break;
-
-	   case State::Reload:
-		   // The reload action is being handled in the Reload() function
-		   break;
-
-	   case State::Empty:
-		   // If the gun is empty, we need to either reload or stay empty
-		   if (mAmmo == 0) {
-			   // Gun stays in Empty state, just wait for reload
-			   SetState(State::Reload);
-		   }
-		   break;
-
-	   default:
-		   break;
-
 };
 
 

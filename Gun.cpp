@@ -46,57 +46,11 @@ bool Gun::TransitionTo(State newState) {
     return false;
 }
 
-void Update(float deltaTime) {
-    switch (mState) {
-    case State::Idle:
-        // Check if we can shoot or reload
-        if (mAmmo <= 0) {
-            SetState(State::Empty);
-        }
-        else {
-            // Can shoot or reload
-            if (mIsShooting) {
-                mShootProgress += deltaTime;
-                if (mShootProgress >= ShootTime) {
-                    mAmmo--;
-                    mIsShooting = false;
-                    mShootProgress = 0.0f;
-                    SetState(State::Idle);
-                }
-            }
-            else if (mIsReloading) {
-                mReloadProgress += deltaTime;
-                if (mReloadProgress >= ReloadTime) {
-                    mAmmo = mCapacity;
-                    mIsReloading = false;
-                    mReloadProgress = 0.0f;
-                    SetState(State::Idle);
-                }
-            }
-        }
-        break;
 
-    case State::Shoot:
-        Shoot();
-        break;
-
-    case State::Reload:
-        Reload();
-        break;
-
-    case State::Empty:
-        if (mAmmo == 0) {
-            SetState(State::Reload);
-        }
-        break;
-
-    default:
-        break;
-    }
 }
 
 
-void PrintState() const {
+void Gun::PrintState() {
     switch (mState) {
     case State::Idle:
         std::cout << "State: Idle\n";
